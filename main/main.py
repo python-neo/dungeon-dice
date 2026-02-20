@@ -12,7 +12,6 @@ while True :
     commands = command.strip ().lower ().split (" ")
     try :
         func = player.commands [commands [0]]
-        console.clear ()
     except KeyError :
         console.print ("[bold red]Command not found.[/]")
         continue
