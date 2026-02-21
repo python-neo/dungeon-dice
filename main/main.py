@@ -1,4 +1,5 @@
 from .console import console
+import sys
 from rich.panel import Panel
 from rich.prompt import Prompt
 from .player import Player
@@ -19,3 +20,7 @@ while True :
         func ["command"] (*commands [1:])
     else :
         func ["command"] ()
+
+    if player.hp <= 0 :
+        console.print ("[bold red]You died in the dungeon.[/]")
+        sys.exit ()

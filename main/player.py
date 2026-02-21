@@ -23,6 +23,19 @@ class Player :
         self.commands : dict = {"exit" : {"command" : sys.exit, "args" : False},
                          "i" : {"command" : self.inventory, "args" : False},
                          "enter" : {"command" : self.enter, "args" : False}}
+        self.potion_drop_table : tuple = (
+            ("Healing Potions", 40),
+            ("Strength Potions", 25),
+            ("Escape Potions", 20),
+            ("Greater Healing Potions", 15),
+        )
+        self.trap_table : tuple = (
+            ("Darts", 5, 35),
+            ("Spikes", 8, 25),
+            ("Poison Needle", 6, 20),
+            ("Swinging Blade", 12, 15),
+            ("Crushing Wall", 18, 5),
+        )
 
     def enter (self) -> None:
         roll = Dice.roll (4)
@@ -41,6 +54,26 @@ class Player :
                 else :
                     console.print ("[green]You find treasure! +5 gold.[/]")
                     self.gold += 5 
+        elif roll == 2 :
+            console.print ("[green]You find treasure![/]")
+            gold = Dice.roll (10)
+            self.gold += gold
+            console.print (f"[gold1]+{gold} gold.[/]")
+
+            potions_found = [name for name, chance in self.potion_drop_table if Dice.rpg (100, chance)]
+            if not potions_found :
+                console.print ("[default]No potions this time.[/]")
+            for potion in potions_found :
+                self.potions [potion] += 1
+                console.print (f"[cyan]You found 1 {potion[:-1]}![/]")
+        elif roll == 3 :
+            console.print ("[red]You stumble into a trap![/]")
+            traps_hit = [(name, damage) for name, damage, chance in self.trap_table if Dice.rpg (100, chance)]
+            if not traps_hit :
+                console.print ("[green]However, you avoid all of them[/]")
+            for name, damage in traps_hit :
+                self.hp = max (0, self.hp - damage)
+                console.print (f"[red]{name}! You lose {damage} HP.[/]")
         else :
             raise NotImplementedError
 
