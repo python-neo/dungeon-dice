@@ -4,6 +4,22 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2026-02-22]
+### Added
+- `potion` command for consuming potions from the command loop.
+- Player attack stat in inventory output.
+- `Player.battle` combat-state flag to support escape potion behavior during fights.
+
+### Changed
+- Potion inventory now uses normalized internal IDs with display labels for cleaner command parsing.
+- Potion drop table and treasure-room potion messages now use shared potion label mapping.
+- Refactored `use_potion` to a shorter, shared-control-flow implementation.
+
+### Fixed
+- Potion name parsing now accepts singular/plural suffixes (`potion`/`potions`).
+- Healing and greater-healing potions now cap HP at 100.
+- Escape potion now checks stock, consumes on use, and requires active battle.
+
 ## [2026-02-21]
 ### Added
 - Treasure rooms (`roll == 2`) that award random gold.
