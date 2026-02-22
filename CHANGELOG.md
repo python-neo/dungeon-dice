@@ -4,16 +4,21 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [2026-02-22]
+## 2026-02-22 - 1.0.0
 ### Added
 - `potion` command for consuming potions from the command loop.
 - Player attack stat in inventory output.
 - `Player.battle` combat-state flag to support escape potion behavior during fights.
+- Monster encounters (`roll == 4`) with turn-based combat and gold rewards.
+- Monster roster (`Rat`, `Bat Swarm`, `Goblin`, `Skeleton`, `Orc Brute`, `Cave Troll`).
 
 ### Changed
 - Potion inventory now uses normalized internal IDs with display labels for cleaner command parsing.
 - Potion drop table and treasure-room potion messages now use shared potion label mapping.
 - Refactored `use_potion` to a shorter, shared-control-flow implementation.
+- Strength potion now works only in battle and applies a temporary attack buff.
+- Room generation moved to percentage-based rolls for room-type balancing.
+- Combat balance tuned with adjusted monster damage, potion healing values, and post-fight recovery.
 
 ### Fixed
 - Potion name parsing now accepts singular/plural suffixes (`potion`/`potions`).
