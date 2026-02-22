@@ -1,142 +1,113 @@
 # Dungeon Dice
 
-A lightweight Python CLI dungeon crawler.
+Turn-based dungeon crawler in the terminal, built with Python.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)
-![Platform](https://img.shields.io/badge/Platform-CLI-orange.svg)
-![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
+## Contents
 
----
-
-## Table of Contents
-
-- [About](#about)
-- [Features](#features)
-- [Game Structure](#game-structure)
-- [Installation & Usage](#installation--usage)
+- [Background](#background)
+- [Install](#install)
+- [Usage](#usage)
 - [Gameplay](#gameplay)
-- [Planned Features](#planned-features)
-- [License](#license)
+- [Configuration](#configuration)
+- [Development](#development)
 - [Contributing](#contributing)
+- [License](#license)
 
----
+## Background
 
-## About
+Dungeon Dice is a lightweight CLI game where each `enter` command rolls a room event:
 
-**Dungeon Dice** is a fast-paced command-line dungeon exploration game.
+- empty room
+- treasure room
+- trap room
+- monster fight
 
-Each room you enter is decided by chance—enemies, traps, treasure, or nothing at all. Manage your health, collect gold, and survive long enough to escape the dungeon.
+You manage HP, attack, gold, and potions while trying to survive dungeon runs.
 
-The project is designed to be simple, expandable, and ideal for learning Python game loops and random event systems.
-
----
-
-## Features
-
-- Random dungeon events
-- Turn-based combat
-- Treasure collection system
-- Healing potion mechanic
-- Expandable game loop
-- Pure CLI gameplay
-
----
-
-## Game Structure
-
-Example project layout:
-
-```text
-dungeon-dice/
-│
-├── main.py        # Main game loop
-├── events.py      # Dungeon events logic
-├── player.py      # Player stats and inventory
-├── combat.py      # Combat handling
-└── README.md
-````
-
-Small projects may combine everything into `main.py`.
-
----
-
-## Installation & Usage
+## Install
 
 ### Requirements
 
-- Python **3.8 or above**
+- Python 3.10+
+- `rich`
 
-### Run the Game
-
-Navigate to the project folder and run:
+### Setup
 
 ```bash
-python main.py
+pip install -r requirements.txt
 ```
 
----
+## Usage
+
+Run from the project root:
+
+```bash
+python -m main.main
+```
+
+Core commands:
+
+- `enter` - roll a new room event
+- `i` - show inventory and stats
+- `potion <name>` - use a potion
+- `exit` - quit the game
+
+Potion examples:
+
+- `potion healing`
+- `potion greater healing`
+- `potion strength`
+- `potion escape`
 
 ## Gameplay
 
-Each turn:
+- HP starts at 100.
+- Monster fights are turn-based.
+- Strength potion applies a temporary attack buff during battle.
+- Escape potion only works during battle and ends the current fight.
+- Healing effects are capped at 100 HP.
 
-1. Enter a room.
+## Configuration
 
-2. A random event occurs:
+Main balancing tables live in `main/player.py`:
 
-   - Enemy encounter
-   - Trap
-   - Treasure
-   - Empty room
+- `self.potion_drop_table`
+- `self.trap_table`
+- `self.monster_table`
 
-3. Player chooses actions:
+Room probabilities are defined in `Player.enter()`.
 
-   - Fight
-   - Use potion
-   - Continue exploring
-   - Escape dungeon
+## Development
 
-Game ends when:
+Project layout:
 
-- Player health reaches 0, or
-- Player escapes with collected gold.
+```text
+main/
+  __init__.py
+  console.py
+  main.py
+  player.py
+CHANGELOG.md
+README.md
+LISCENCE.md
+```
 
----
+Quick syntax check:
 
-## Planned Features
-
-Future improvements may include:
-
-- Boss encounters
-- Inventory expansion
-- Shop rooms
-- Equipment system
-- Critical hits & skills
-- Save/load system
-- Procedural dungeon paths
-- High-score tracking
-
----
-
-## License
-
-This project is released under the **MIT Liscence**.
-
-You are free to use, modify, and distribute it.
-
----
+```bash
+python -m py_compile main/main.py main/player.py main/console.py
+```
 
 ## Contributing
 
-Contributions are welcome:
+Issues and pull requests are welcome.
 
-- Report bugs via issues
-- Suggest new mechanics
-- Submit improvements or refactors
+For gameplay changes, include:
 
-Please keep code clean and consistent with the project structure.
+- what changed
+- why the change improves balance or UX
+- how you tested the behavior
 
----
+## License
 
-### Build fast, expand endlessly, and survive the dungeon!
+This project is licensed under MIT. See `LISCENCE.md`.

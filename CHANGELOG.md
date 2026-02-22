@@ -4,6 +4,28 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 2026-02-22 - 1.1
+### Added
+- `main/game_data.py` to centralize shared game definitions and defaults.
+- `Trap` dataclass usage for trap table entries.
+- Sphinx docs pages for `main`, `player`, and `game_data`.
+- `CONTRIBUTING.md` with setup, commit, and PR guidance.
+- In-fight inventory access (`i`) during monster encounters.
+
+### Changed
+- Moved `Monster`, `Trap`, `Potion`, and `GLOBAL` out of `main/player.py` into `main/game_data.py`.
+- Moved potion drop chance into `Potion.drop_chance` and removed separate potion drop table.
+- Reworked potion inventory to store `Potion` objects (with quantity) instead of raw ints.
+- Updated room roll checks to explicit boundary-based percentages.
+- Refreshed `README.md` to a standard structured format.
+- Updated docstrings in `main/game_data.py`, `main/player.py`, and `main/main.py` for Sphinx/Napoleon rendering.
+- Refactored `main/main.py` to use a documented `run_game()` entrypoint.
+
+### Fixed
+- Sphinx import path configuration in `sphinx/source/conf.py`.
+- Sphinx `.rst` title underline lengths so toctree titles render correctly.
+- Ignored Sphinx build artifacts via `.gitignore` (`/sphinx/build/`).
+
 ## 2026-02-22 - 1.0.0
 ### Added
 - `potion` command for consuming potions from the command loop.

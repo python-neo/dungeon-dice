@@ -30,3 +30,6 @@ htmlcov/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Sphinx output
+/sphinx/build/
