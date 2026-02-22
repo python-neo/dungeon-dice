@@ -14,20 +14,27 @@ class Dice :
 
 class Player :
     def __init__ (self) -> None :
+        self.attack = 5
+        self.battle = False
         self.hp : int = 100
         self.gold : int = 0
-        self.potions : dict = {"Healing Potions" : 0,
-                        "Strength Potions" : 0,
-                        "Escape Potions" : 0,
-                        "Greater Healing Potions" : 0}
+        self.potions : dict = {"healing" : 0,
+                        "strength" : 0,
+                        "escape" : 0,
+                        "greater healing" : 0}
+        self.potion_labels : dict = {"healing" : "Healing Potion",
+                              "strength" : "Strength Potion",
+                              "escape" : "Escape Potion",
+                              "greater healing" : "Greater Healing Potion"}
         self.commands : dict = {"exit" : {"command" : sys.exit, "args" : False},
-                         "i" : {"command" : self.inventory, "args" : False},
-                         "enter" : {"command" : self.enter, "args" : False}}
+                                "i" : {"command" : self.inventory, "args" : False},
+                                "enter" : {"command" : self.enter, "args" : False},
+                                "potion" : {"command" : self.use_potion, "args" : True}}
         self.potion_drop_table : tuple = (
-            ("Healing Potions", 40),
-            ("Strength Potions", 25),
-            ("Escape Potions", 20),
-            ("Greater Healing Potions", 15),
+            ("healing", 40),
+            ("strength", 25),
+            ("escape", 20),
+            ("greater healing", 15),
         )
         self.trap_table : tuple = (
             ("Darts", 5, 35),
@@ -65,7 +72,7 @@ class Player :
                 console.print ("[default]No potions this time.[/]")
             for potion in potions_found :
                 self.potions [potion] += 1
-                console.print (f"[cyan]You found 1 {potion[:-1]}![/]")
+                console.print (f"[cyan]You found 1 {self.potion_labels [potion]}![/]")
         elif roll == 3 :
             console.print ("[red]You stumble into a trap![/]")
             traps_hit = [(name, damage) for name, damage, chance in self.trap_table if Dice.rpg (100, chance)]
@@ -77,13 +84,51 @@ class Player :
         else :
             raise NotImplementedError
 
-    def inventory (self) :
+    def inventory (self) -> None :
         table = Table (show_header = False, box = None)
         for _ in range (2) : table.add_column ()
 
-        table.add_row ("HP", f"[bold red]{self.hp}[/]")
+        table.add_row ("HP", f"[bold green]{self.hp}[/]")
+        table.add_row ("Attack", f"[bold red]{self.attack}[/]")
         table.add_row ("Gold", f"[gold1]x{self.gold}[/]")
         for potion_name, count in self.potions.items () :
-            table.add_row (potion_name, f"[cyan]x{count}[/]")
+            table.add_row (self.potion_labels [potion_name] + "s", f"[cyan]x{count}[/]")
 
         console.print (Panel (table, title = "Inventory"))
+
+    def use_potion (self, *args) -> None :
+        if not args :
+            console.print ("[bold red]Choose a potion.[/]")
+            return
+
+        potion = " ".join (args).strip ().lower ()
+        potion = potion.removesuffix (" potions")
+        potion = potion.removesuffix (" potion")
+        if potion not in self.potions :
+            console.print ("[bold red]Potion not found[/]")
+            return
+
+        if potion == "escape" :
+            if not self.battle :
+                console.print ("[red]You have to be in a battle to use this potion.[/]")
+                return
+            if self.potions ["escape"] <= 0 :
+                console.print ("[red]You do not have this potion.[/]")
+                return
+            self.potions ["escape"] -= 1
+            self.battle = False
+            console.print ("You escape from the battle.")
+            return
+
+        if self.potions [potion] <= 0 :
+            console.print ("[red]You do not have this potion.[/]")
+            return
+
+        if potion == "strength" :
+            self.attack *= 2
+            console.print ("You [cyan]double[/] your attack.")
+        else :
+            heal = (30 if potion == "greater healing" else 10)
+            self.hp = min (100, self.hp + heal)
+            console.print (f"[green]+{heal} HP![/]")
+        self.potions [potion] -= 1
